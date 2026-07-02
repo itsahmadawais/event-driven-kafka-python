@@ -61,7 +61,7 @@ A hands-on project that explores **Apache Kafka** by building an event-driven sy
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/itsahmadawais/event-driven-kafka-python.git
 cd event-driven-kafka-python
 ```
 
