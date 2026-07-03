@@ -16,5 +16,5 @@ class PaymentProcessedEvent(Event):
     
     @computed_field
     @property
-    def event_type(self) -> Literal["payment_processed"]:
-        return "payment_processed"
+    def event_type(self) -> Literal["PaymentProcessed"]:
+        return "PaymentProcessed"

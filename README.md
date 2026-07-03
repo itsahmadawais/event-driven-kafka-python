@@ -199,8 +199,8 @@ python -m app.order_service.producer
 * [x] Consumer Rebalancing
 * [x] Message Keys
 * [x] Event-Driven Microservices
-* [ ] Retry Strategy
-* [ ] Dead Letter Queue (DLQ)
+* [x] Retry Strategy
+* [x] Dead Letter Queue (DLQ)
 * [ ] Manual Offset Management
 * [ ] Idempotent Consumers
 * [ ] Exactly-Once Processing
