@@ -13,7 +13,11 @@ event = OrderCreatedEvent(
     )
 )
 
-producer.send(ORDER_TOPIC, event)
+producer.send(
+    topic=ORDER_TOPIC, 
+    key=str(event.payload.order_id),
+    event=event
+)
 
 
 print("✅ Event sent successfully")

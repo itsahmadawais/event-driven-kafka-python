@@ -9,9 +9,10 @@ class KafkaProducer:
             "bootstrap.servers": bootstrap_servers,
         })
         
-    def send(self, topic: str, event):
+    def send(self, topic: str, event, key: str | None = None):
         self.producer.produce(
             topic=topic,
+            key=key,
             value=json.dumps(event.model_dump(mode="json")).encode("utf-8"),
         )
         self.producer.flush()
