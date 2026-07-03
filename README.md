@@ -201,7 +201,7 @@ python -m app.order_service.producer
 * [x] Event-Driven Microservices
 * [x] Retry Strategy
 * [x] Dead Letter Queue (DLQ)
-* [ ] Manual Offset Management
+* [x] Manual Offset Management
 * [ ] Idempotent Consumers
 * [ ] Exactly-Once Processing
 * [ ] Schema Registry & Avro
