@@ -5,22 +5,65 @@
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-A hands-on project that explores **Apache Kafka** by building an event-driven system in **Python**. Rather than focusing on isolated code snippets, this repository demonstrates how producers, consumers, topics, partitions, consumer groups, and event models work together in a real-world architecture.
+A hands-on project that explores **Apache Kafka** by building an **event-driven microservices architecture** in **Python**. Rather than focusing on isolated examples, this repository demonstrates how producers, consumers, topics, partitions, consumer groups, message keys, and event models work together in a realistic distributed system.
 
-> **Status:** 🚧 In Progress — New concepts and services will be added as the project evolves.
+> **Status:** 🚧 In Progress — The project is being expanded incrementally as more advanced Kafka concepts are implemented.
 
 ---
 
 ## ✨ Features
 
 * Event-driven architecture
-* Apache Kafka producer implementation
-* Apache Kafka consumer implementation
+* Apache Kafka producers and consumers
+* Multiple microservices communicating through Kafka
 * Strongly typed event models using Pydantic
 * Docker-based local Kafka environment
-* Kafka UI for topic inspection
+* Kafka UI for inspecting topics and messages
 * JSON event serialization
+* Consumer Groups
+* Topic Partitions
+* Message Keys for ordering
+* Consumer Rebalancing
 * Modular Python project structure
+
+---
+
+## 🏗️ Current Architecture
+
+```text
+                    Kafka
+
+        orders                  payments
+           │                        │
+           ▼                        ▼
+   Payment Service         Notification Service
+           ▲
+           │
+     Order Service
+```
+
+Event Flow
+
+```text
+Order Service
+      │
+      │ publishes OrderCreated
+      ▼
+   orders Topic
+      │
+      ▼
+Payment Service
+      │
+      │ publishes PaymentProcessed
+      ▼
+ payments Topic
+      │
+      ▼
+Notification Service
+      │
+      ▼
+Customer Notification
+```
 
 ---
 
@@ -29,7 +72,7 @@ A hands-on project that explores **Apache Kafka** by building an event-driven sy
 * Python 3.14
 * Apache Kafka
 * Docker & Docker Compose
-* Pydantic
+* Pydantic v2
 * confluent-kafka
 
 ---
@@ -40,10 +83,10 @@ A hands-on project that explores **Apache Kafka** by building an event-driven sy
 .
 ├── app
 │   ├── common
-│   ├── consumer
 │   ├── events
-│   ├── producer
-│   └── services
+│   ├── order_service
+│   ├── payment_service
+│   └── notification_service
 │
 ├── docker
 │   └── docker-compose.yml
@@ -73,13 +116,13 @@ python -m venv .venv
 
 Activate it.
 
-Windows
+**Windows**
 
 ```bash
 .venv\Scripts\activate
 ```
 
-Linux / macOS
+**Linux / macOS**
 
 ```bash
 source .venv/bin/activate
@@ -102,19 +145,26 @@ Update the values if needed.
 ### 5. Start Kafka
 
 ```bash
+cd docker
 docker compose up -d
 ```
 
-### 6. Run the Consumer
+### 6. Start the Notification Service
 
 ```bash
-python -m app.consumer.consumer
+python -m app.notification_service.notification_listener
 ```
 
-### 7. Publish an Event
+### 7. Start the Payment Service
 
 ```bash
-python -m app.producer.producer
+python -m app.payment_service.payment_processor
+```
+
+### 8. Publish an Order
+
+```bash
+python -m app.order_service.producer
 ```
 
 ---
@@ -124,10 +174,16 @@ python -m app.producer.producer
 * Producers
 * Consumers
 * Topics
+* Topic Partitions
 * Offsets
 * Consumer Groups
+* Consumer Rebalancing
+* Message Keys
+* Event Ordering
 * Event Serialization
-* Event Modeling
+* Event Modeling with Pydantic
+* Event-Driven Architecture
+* Service-to-Service Communication
 * Kafka UI
 * Docker-based Local Development
 
@@ -139,16 +195,24 @@ python -m app.producer.producer
 * [x] Kafka Consumer
 * [x] Event Models with Pydantic
 * [x] Dockerized Kafka Environment
-* [ ] Multiple Partitions
-* [ ] Consumer Rebalancing
-* [ ] Message Keys
+* [x] Multiple Partitions
+* [x] Consumer Rebalancing
+* [x] Message Keys
+* [x] Event-Driven Microservices
 * [ ] Retry Strategy
 * [ ] Dead Letter Queue (DLQ)
 * [ ] Manual Offset Management
-* [ ] Multiple Microservices
 * [ ] Idempotent Consumers
 * [ ] Exactly-Once Processing
+* [ ] Schema Registry & Avro
+* [ ] Kafka Streams
 * [ ] Integration Tests
+
+---
+
+## 🎯 Project Goal
+
+The objective of this repository is not only to learn Kafka APIs but also to understand the architectural patterns used in production systems, including asynchronous communication, event-driven design, scalability, reliability, and fault tolerance.
 
 ---
 
