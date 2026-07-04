@@ -35,6 +35,8 @@ producer = KafkaProducer(BOOTSTRAP_SERVERS)
 
 print("💳 Payment Service started...")
 
+processed_events = set()
+
 def publish_payment_processed(order):
     payment_event = PaymentProcessedEvent(
         source= "payment-service",
@@ -75,6 +77,10 @@ def publish_to_dlq(event, error:str, retry_count:int, msg):
     )
     print("📥 Sent to DLQ")
   
+def finalize_processing(event_id, msg):
+    processed_events.add(event_id)
+    consumer.commit(msg)
+    
 def process_payment(order):
     print("✅ Payment succeeded!")
     # Assuming Payment is successful, we publish the payment processed event
@@ -92,7 +98,13 @@ try:
             continue
         
         event = json.loads(msg.value().decode("utf-8"))
+        event_id = event["event_id"]
         order = event["payload"]
+        
+        if event_id in processed_events:
+            print("Duplicate event detected. Skipping.")
+            consumer.commit(msg)
+            continue
         
         print(f"💳 Processing payment for Order #{order['order_id']}")
         
@@ -105,11 +117,10 @@ try:
                 time.sleep(1)
             else:
                 if process_payment(order):
-                    publish_payment_processed(order)
+                    publish_payment_processed(order)                    
                     payment_successful = True
-                    consumer.commit(msg)
                     break
-            
+        
         if not payment_successful:
             error_msg = f"Payment failed after max({MAX_RETRIES}) retries"
             
@@ -121,10 +132,8 @@ try:
                 retry_count=MAX_RETRIES,
                 msg=msg
             )
-            
-            consumer.commit(msg)
-            
-            
-            
+        
+        finalize_processing(event_id, msg)
+        
 finally:
     consumer.close()

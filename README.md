@@ -202,7 +202,7 @@ python -m app.order_service.producer
 * [x] Retry Strategy
 * [x] Dead Letter Queue (DLQ)
 * [x] Manual Offset Management
-* [ ] Idempotent Consumers
+* [x] Idempotent Consumers
 * [ ] Exactly-Once Processing
 * [ ] Schema Registry & Avro
 * [ ] Kafka Streams
